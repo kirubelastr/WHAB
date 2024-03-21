@@ -1,5 +1,4 @@
 <?php
-
 // Database configuration
 $servername = "localhost"; // Change this to your database server name
 $username = "root"; // Change this to your database username
@@ -15,7 +14,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch candle names from the database
-$sql = "SELECT name FROM candles";
+$sql = "SELECT name FROM candles"; // Assuming 'candles' table has a column named 'name' for candle names
 $result = $conn->query($sql);
 
 $candles = array();
@@ -30,5 +29,4 @@ $conn->close();
 
 // Return candle names as JSON
 echo json_encode($candles);
-
 ?>

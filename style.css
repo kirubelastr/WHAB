@@ -89,6 +89,20 @@ header {
   width: 80%;
 }
 
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -102,4 +116,59 @@ form select, form input, form button {
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 5px;
+}
+
+form button {
+  background: linear-gradient(to right, #008073, #2fbaff); /* Green gradient */
+  color: #fff; /* White text */
+  border: none; /* Remove default border */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  font-size: 1.2em; /* Make text larger */
+  padding: 5px; /* Increase padding */
+}
+
+form button:hover {
+  background: linear-gradient(to right, #006264, #000dfc); /* Darken color on hover */
+}
+
+.popup-content button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #008000; /* Full green */
+  color: #fff; /* White text */
+  border: none; /* Remove default border */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  font-size: 1.2em; /* Make text larger */
+  padding: 15px; /* Increase padding */
+}
+
+.popup-content button:hover {
+  background-color: #25e925; /* Darken color on hover */
+}
+
+.popup-content p {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.popup-content p br {
+  margin-bottom: 5px;
+}
+
+.popup-content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.popup-content table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.popup-content table tr:nth-child(even) {
+  background-color: #f2f2f2;
 }

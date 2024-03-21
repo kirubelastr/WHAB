@@ -22,7 +22,7 @@
             <h2>Replenish Wax Stock</h2>
             <form id="stock-form">
               <label for="stock-description">Description:</label>
-              <select id="stockdescription" name="stockdescription">
+              <select id="stock-description" name="stock-description">
                 <option value="waxandoil">Wax & oil</option>
               </select></br>
               <label for="stock-bag-number">Bag Number:</label>
@@ -62,13 +62,24 @@
           </section>
         </div>
       </main>
-      <div id="popup" class="popup">
+     <!-- Confirmation Popup -->
+      <div id="popup-confirm" class="popup">
         <div class="popup-content">
           <span class="close">×</span>
-          <p>Are you sure about the inputted value?</p>
+          <p id="confirm-text"></p>
           <button id="confirm" type="button">Confirm</button>
         </div>
       </div>
+
+      <!-- Result Popup -->
+      <div id="popup-result" class="popup">
+        <div class="popup-content">
+          <span class="close">×</span>
+          <p id="result-text"></p>
+          <button id="close" type="button">Close</button>
+        </div>
+      </div>
+
       <div class="bottom">
         <section id="chart" class="section chart-section">
           <h2>Chart</h2>
