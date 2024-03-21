@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Candlelight Co. - Inventory Management</title>
+  <title>The WHAB CANDLE Co. - Inventory Management</title>
   <link rel="stylesheet" href="style.css">
   <script src="jquery-3.6.0.min.js"></script>
   <script src="script.js"></script>
@@ -15,55 +15,74 @@
       <h1 id="title">Stock Management</h1>
       <button id="logout" type="button">Logout</button>
     </header>
-    <main>
-      <div class="top">
-        <div class="section-container">
-          <section id="chart" class="section chart-section">
-            <h2>Chart</h2>
-            <!-- Add chart display here -->
+    <div class="general">
+      <main>
+        <div class="top">
+          <section id="add-stock" class="section stock-section">
+            <h2>Replenish Wax Stock</h2>
+            <form id="stock-form">
+              <label for="stock-description">Description:</label>
+              <select id="stockdescription" name="stockdescription">
+                <option value="waxandoil">Wax & oil</option>
+              </select></br>
+              <label for="stock-bag-number">Bag Number:</label>
+              <input type="number" id="stock-bag-number" name="bag_number" min="1" step="1" required placeholder="Enter bag number"></br>
+              <label for="stock-weight">Weight Added (in kg):</label>
+              <input type="number" id="stock-weight" name="weight" min="0.1" step="0.1" required placeholder="Enter weight"></br>
+              <label for="stock-place">Place:</label>
+              <input type="text" id="stock-place" name="place" required placeholder="Enter place"></br>
+              <label for="stock-remark">Remark:</label>
+              <input type="text" id="stock-remark" name="remark" required placeholder="Enter remark"></br>
+              <button type="submit">Add Stock</button>
+            </form>
           </section>
+
+          <section id="add-inventory" class="section inventory-section">
+            <h2>Record a Sale</h2>
+            <form id="inventory-form">
+              <label for="inventory-wax">Available Wax (in kg):</label>
+              <input type="number" id="inventory-wax" name="wax" min="1" required readonly></br>
+              <label for="inventory-product">Candle Name:</label>
+              <select id="inventory-product" name="inventoryproduct"></select></br>
+              <label for="inventory-quantity">Quantity produced:</label>
+              <input type="number" id="inventory-quantity" name="quantity" min="1" required placeholder="Enter quantity"></br>
+              <button type="submit">Record Candle production</button>
+            </form>
+          </section>
+
           <section id="add-sale" class="section sale-section">
             <h2>Record a Sale</h2>
             <form id="sale-form">
               <label for="sale-product">Candle Name:</label>
-              <select id="sale-product" name="product"></select>
+              <select id="sale-product" name="product"></select></br>
               <label for="sale-quantity">Quantity Sold:</label>
-              <input type="number" id="sale-quantity" name="quantity" min="1" required placeholder="Enter quantity">
+              <input type="number" id="sale-quantity" name="quantity" min="1" required placeholder="Enter quantity"></br>
               <button type="submit">Record Sale</button>
             </form>
           </section>
-
-          <section id="add-stock" class="section stock-section">
-            <h2>Replenish Stock</h2>
-            <form id="stock-form">
-              <label for="stock-product">Candle:</label>
-              <select id="stock-product" name="product"></select>
-              <label for="stock-quantity">Quantity Added:</label>
-              <input type="number" id="stock-quantity" name="quantity" min="1" required placeholder="Enter quantity">
-              <button type="submit">Add Stock</button>
-            </form>
-          </section>
+        </div>
+      </main>
+      <div id="popup" class="popup">
+        <div class="popup-content">
+          <span class="close">×</span>
+          <p>Are you sure about the inputted value?</p>
+          <button id="confirm" type="button">Confirm</button>
         </div>
       </div>
-    </main>
-    <div id="popup" class="popup">
-      <div class="popup-content">
-        <span class="close">&times;</span>
-        <p>Are you sure about the inputted value?</p>
-        <button id="confirm" type="button">Confirm</button>
+      <div class="bottom">
+        <section id="chart" class="section chart-section">
+          <h2>Chart</h2>
+          <!-- Add chart display here -->
+        </section>
+        <section id="sold-items" class="section sold-items-section">
+          <h2>Sold Items</h2>
+          <!-- Add display for sold items here -->
+        </section>
+        <section id="all-stocks" class="section all-stocks-section">
+          <h2>All Stocks</h2>
+          <!-- Add display for all stocks here -->
+        </section>
       </div>
-    </div>
-    <div class="bottum">
-      <!-- New sections for sold items and list of all stocks -->
-      <section id="sold-items" class="section sold-items-section">
-        <h2>Sold Items</h2>
-        <!-- Add display for sold items here -->
-      </section>
-
-      <section id="all-stocks" class="section all-stocks-section">
-        <h2>All Stocks</h2>
-        <!-- Add display for all stocks here -->
-      </section>
     </div>
   </div>
 </body>

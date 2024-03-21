@@ -6,9 +6,8 @@ body {
 }
 
 .container {
-  max-width: 100%; /* Change max-width to 100% */
+  max-width: 100%;
   margin: 0 auto;
-  padding: 20px;
 }
 
 header {
@@ -27,7 +26,7 @@ header {
 
 #title {
   flex: 1;
-  text-align: center;
+  text-align: justify;
 }
 
 #logout {
@@ -45,14 +44,14 @@ header {
   background-color: #d32f2f;
 }
 
-.top, .bottum {
-  display: flex;
-  justify-content: space-between;
+.general {
+  padding: 20px;
+  background-color: #246e76;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
 }
 
-.section-container, .bottum {
+.top, .bottom {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
 }
 
@@ -62,7 +61,7 @@ header {
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 20px;
-  margin-bottom: 20px;
+  margin: 10px;
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
 }
 
@@ -90,16 +89,17 @@ header {
   width: 80%;
 }
 
-.close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+form {
+  display: flex;
+  flex-direction: column;
 }
 
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
+form label {
+  margin-bottom: 5px;
+}
+
+form select, form input, form button {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
 }
