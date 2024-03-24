@@ -41,9 +41,11 @@
             <h2>Record a Sale</h2>
             <form id="inventory-form">
               <label for="inventory-wax">Available Wax (in kg):</label>
-              <input type="number" id="inventory-wax" name="wax" min="1" required readonly></br>
-              <label for="inventory-product">Candle Name:</label>
-              <select id="inventory-product" name="inventoryproduct"></select></br>
+              <input type="number" id="inventory-wax" name="wax" min="1"  readonly></br>
+              <label for="inventoryproduct">Candle Name:</label>
+              <select id="inventoryproduct" name="inventoryproduct"></select></br>
+              <label for="candle-quantity">Max Quantity :</label>
+              <input type="number" id="candle-quantity" name="maxquantity"  readonly placeholder="max amount"></br>
               <label for="inventory-quantity">Quantity produced:</label>
               <input type="number" id="inventory-quantity" name="quantity" min="1" required placeholder="Enter quantity"></br>
               <button type="submit">Record Candle production</button>

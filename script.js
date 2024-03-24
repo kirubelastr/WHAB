@@ -8,14 +8,10 @@ $(document).ready(function() {
         // Parse JSON response
         var candles = JSON.parse(data);
         // Empty the dropdown options
-        
         $('#sale-product').empty();
-        $('#inventory-product').empty();
         // Add options dynamically
         candles.forEach(function(candle) {
-          
           $('#sale-product').append(`<option value="${candle.name}">${candle.name}</option>`);
-          $('#inventory-product').append(`<option value="${candle.name}">${candle.name}</option>`);
         });
       },
       error: function(xhr, status, error) {
@@ -26,6 +22,53 @@ $(document).ready(function() {
   }
   // Call the function to populate dropdowns on page load
   populateCandleDropdown();
+
+  ///////////////////////////////////////////////////////////////////////////////////////
+  function refreshData() {
+    $.ajax({
+      url: 'getwaxamount.php',
+      method: 'GET',
+      dataType: 'json', // Ensure that the returned data is parsed as JSON
+      success: function(data) {
+        console.log(data); // Log the response
+
+        // Update the available wax field
+        $('#inventory-wax').val(data.total_sum);
+
+        // Clear the existing options in the dropdown
+        var select = $('#inventoryproduct');
+        select.empty();
+
+        // Check if the candleseach array exists in the data
+        if (data.candleseach && Array.isArray(data.candleseach)) {
+          // Populate the candle name dropdown
+          data.candleseach.forEach(function(candle) {
+            select.append(new Option(candle.name, candle.name));
+          });
+
+          // Update the max quantity field when a candle is selected
+          select.change(function() {
+            var selectedCandle = data.candleseach.find(candle => candle.name === this.value);
+            $('#candle-quantity').val(selectedCandle ? selectedCandle.max_producible_cartons * 30 + selectedCandle.max_producible_pieces : '');
+          });
+
+          // Trigger the change event to update the max quantity field for the initially selected candle
+          select.trigger('change');
+        } else {
+          console.error('Error: candleseach array not found in the response data');
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.error('Error:', errorThrown);
+        alert('Error fetching data. Please try again later.');
+      }
+    });
+  }
+
+  // Call the function to refresh the data
+  refreshData();
+
+  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   $('#sale-form').submit(function(e) {
@@ -140,4 +183,36 @@ $('#stock-form').off('submit').on('submit', function(e) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ // Handle form submission for recording sale
+ // Handle form submission for recording sale
+ $('#sale-form').submit(function(e) {
+  e.preventDefault();
+  var candleName = $('#sale-product').val();
+  var quantity = $('#sale-quantity').val();
+  
+  // Display confirmation popup
+  var confirmed = confirm(`Are you sure you want to record the sale of ${quantity} units of ${candleName}?`);
+  
+  if (confirmed) {
+    // Perform AJAX call to record the sale
+    $.ajax({
+      url: 'record_sale.php',
+      method: 'POST',
+      data: { candleName: candleName, quantity: quantity },
+      success: function(response) {
+        alert(response); // Alert success message
+        // Refresh dropdowns after successful sale recording
+        populateCandleDropdown();
+      },
+      error: function(xhr, status, error) {
+        console.error(error);
+        alert('Error recording sale. Please try again later.'); // Alert error message
+      }
+    });
+  } else {
+    alert('Sale canceled. Please review the details and try again.'); // Alert the cancellation
+  }
+});
+
+
 });
