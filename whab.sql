@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 24, 2024 at 08:12 PM
+-- Generation Time: Mar 25, 2024 at 06:41 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,26 @@ SET time_zone = "+00:00";
 --
 -- Database: `whab`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `candleinventory`
+--
+
+CREATE TABLE `candleinventory` (
+  `id` int(11) NOT NULL,
+  `name` varchar(15) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `date` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `candleinventory`
+--
+
+INSERT INTO `candleinventory` (`id`, `name`, `amount`, `date`) VALUES
+(1, 'big', 22, '2024-03-25');
 
 -- --------------------------------------------------------
 
@@ -66,7 +86,16 @@ CREATE TABLE `inventory` (
 
 INSERT INTO `inventory` (`id`, `discription`, `bag_number`, `weight`, `total`, `place`, `remark`, `date`) VALUES
 (24, 'waxandoil', 21, 3.00, 63.00, 'sf', 'gg', '2024-03-22'),
-(25, 'waxandoil', 2, 3.00, 6.00, '1', '3', '2024-03-24');
+(25, 'waxandoil', 2, 3.00, 6.00, '1', '3', '2024-03-24'),
+(26, 'waxandoil', 2, 33.00, 66.00, 'ad', 'fff', '2024-03-25'),
+(27, 'waxandoil', 2, 3.00, 6.00, 'asf', 'vzx', '2024-03-25'),
+(28, 'waxandoil', 2, 4.00, 8.00, 'af', 'asf', '2024-03-25'),
+(29, 'waxandoil', 2, 2.00, 4.00, '1', '1', '2024-03-25'),
+(30, 'waxandoil', 3, 2.00, 6.00, 'd', 'd', '2024-03-25'),
+(31, 'waxandoil', 3, 2.00, 6.00, 'ee', 'e', '2024-03-25'),
+(32, 'waxandoil', 2, 3.00, 6.00, 'ava', 'afsaf', '2024-03-25'),
+(33, 'waxandoil', 3, 3.00, 9.00, '23', '32', '2024-03-25'),
+(34, 'waxandoil', 3, 4.00, 12.00, 'f', 'f', '2024-03-25');
 
 -- --------------------------------------------------------
 
@@ -76,15 +105,21 @@ INSERT INTO `inventory` (`id`, `discription`, `bag_number`, `weight`, `total`, `
 
 CREATE TABLE `sales` (
   `id` int(11) NOT NULL,
-  `date` date NOT NULL,
   `candle_type` varchar(10) NOT NULL,
   `amount` decimal(7,3) NOT NULL,
-  `total` decimal(8,4) NOT NULL
+  `total` decimal(8,4) NOT NULL,
+  `date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `candleinventory`
+--
+ALTER TABLE `candleinventory`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `candles`
@@ -103,6 +138,12 @@ ALTER TABLE `inventory`
 --
 
 --
+-- AUTO_INCREMENT for table `candleinventory`
+--
+ALTER TABLE `candleinventory`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `candles`
 --
 ALTER TABLE `candles`
@@ -112,7 +153,7 @@ ALTER TABLE `candles`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

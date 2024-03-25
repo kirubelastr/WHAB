@@ -2,8 +2,8 @@
 
 // Database configuration
 $servername = "localhost";
-$username = "your_username";
-$password = "your_password";
+$username = "root";
+$password = "";
 $dbname = "whab";
 
 // Create connection
