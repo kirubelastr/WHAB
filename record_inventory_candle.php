@@ -14,10 +14,10 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get POST data
-$maxwax = $_POST['maxwax'];
-$candleName = $_POST['candleName'];
-$quantity = $_POST['quantity'];
+// Get POST data and sanitize
+$maxwax = filter_input(INPUT_POST, 'maxwax', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+$candleName = filter_input(INPUT_POST, 'candleName', FILTER_SANITIZE_STRING);
+$quantity = filter_input(INPUT_POST, 'quantity', FILTER_SANITIZE_NUMBER_INT);
 
 // Retrieve the amount for the given candle name from the candles table
 $sql = "SELECT amount FROM candles WHERE name = ?";

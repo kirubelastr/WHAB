@@ -1,26 +1,44 @@
 $(document).ready(function() {
    //populate the sales dropdown
-  function populateCandleDropdown() {
-    console.log("populate candle dropdown called");
-    $.ajax({
-      url: 'get_candles.php',
-      method: 'GET',
-      success: function(data) {
-        // Parse JSON response
-        var candles = JSON.parse(data);
-        // Empty the dropdown options
-        $('#sale-product').empty();
-        // Add options dynamically
-        candles.forEach(function(candle) {
-          $('#sale-product').append(`<option value="${candle.name}">${candle.name}</option>`);
-        });
-      },
-      error: function(xhr, status, error) {
-        console.error(error);
-        alert('Error fetching candle names. Please try again later.'); // Alert the error message
-      }
-    });
+    function populateCandleDropdown() {
+      console.log("populateCandleDropdown function called");
+      $.ajax({
+        url: 'get_candles.php',
+        method: 'GET',
+        dataType: 'json', // Ensure that the returned data is parsed as JSON
+        success: function(data) {
+          console.log(data); // Log the response
+
+          // Clear the existing options in the dropdown
+          var select = $('#sale-product');
+          select.empty();
+
+          // Check if the candles object exists in the data
+          if (data && typeof data === 'object') {
+            // Populate the candle name dropdown
+            Object.keys(data).forEach(function(candle) {
+              select.append(new Option(candle, candle));
+            });
+
+            // Update the max quantity field when a candle is selected
+            select.change(function() {
+              var selectedCandle = data[this.value];
+              $('#max-quantity').val(selectedCandle);
+            });
+
+            // Trigger the change event to update the max quantity field for the initially selected candle
+            select.trigger('change');
+          } else {
+            console.error('Error: candles object not found in the response data');
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.error('Error:', errorThrown);
+          alert('Error fetching data. Please try again later.');
+        }
+      });
   }
+
   //refresh the max quantity and also the max wax available
   function refreshData() { 
     console.log("refresh function called");
@@ -147,7 +165,6 @@ $(document).ready(function() {
     });
   });
 
-
   $('#inventory-form').submit(function(e) {
     e.preventDefault();
     var candleName = $('#inventoryproduct').val();
@@ -155,13 +172,13 @@ $(document).ready(function() {
     var quantity = parseInt($('#inventory-quantity').val());
     var maxquantity = parseInt($('#candle-quantity').val());
   
-    // Check if inputs are of correct type
-    if (isNaN(maxquantity)) {
-      alert('Invalid input. Please enter a number for bag number and weight.');
+    // Check if inputs are of correct type and within valid range
+    if (isNaN(maxquantity) || isNaN(quantity)) {
+      alert('Invalid input. Please enter a number for quantity and maximum quantity.');
       return;
     }
-    if(maxquantity<quantity){
-      alert('Invalid input. Please enter a Quantity less than or equal to maximum quantity.');
+    if (quantity > maxquantity) {
+      alert('Invalid input. Please enter a quantity less than or equal to the maximum quantity.');
       return;
     }
   
@@ -192,39 +209,54 @@ $(document).ready(function() {
         }
       });
     } else {
-      alert('production canceled. Please review the details and try again.'); // Alert the cancellation
+      alert('Production canceled. Please review the details and try again.'); // Alert the cancellation
     }
   });
   
-
   $('#sale-form').submit(function(e) {
     e.preventDefault();
     var candleName = $('#sale-product').val();
-    var quantity = $('#sale-quantity').val();
-    
-    // Display confirmation popup
-    var confirmed = confirm(`Are you sure you want to record the sale of ${quantity} units of ${candleName}?`);
-    
-    if (confirmed) {
-      // Perform AJAX call to record the sale
-      $.ajax({
-        url: 'record_sale.php',
-        method: 'POST',
-        data: { candleName: candleName, quantity: quantity },
-        success: function(response) {
-          alert(response); // Alert success message
-          // Refresh dropdowns after successful sale recording
-          populateCandleDropdown();
-        },
-        error: function(xhr, status, error) {
-          console.error(error);
-          alert('Error recording sale. Please try again later.'); // Alert error message
-        }
-      });
+    var maxQuantity = parseInt($('#max-quantity').val());
+    var quantity = parseInt($('#sale-quantity').val());
+    var saleplace= $('#sale-place').val();
+  
+    // Check if quantity is an integer and less than or equal to max quantity
+    if (Number.isInteger(quantity) && quantity <= maxQuantity) {
+      // Display confirmation popup
+      var confirmed = confirm(`Are you sure you want to record the sale of ${quantity} units of ${candleName} to ${saleplace}?`);
+  
+      if (confirmed) {
+        // Perform AJAX call to record the sale
+        $.ajax({
+          url: 'record_sale.php',
+          method: 'POST',
+          data: { candleName: candleName, quantity: quantity ,saleplace:saleplace },
+          success: function(response) {
+            alert(response); // Alert success message
+            // Refresh dropdowns after successful sale recording
+            populateCandleDropdown();
+            // Reset the form
+            $('#sale-form')[0].reset();
+          },
+          error: function(xhr, status, error) {
+            console.error(error);
+            alert('Error recording sale. Please try again later.'); // Alert error message
+            // Reset the form
+            $('#sale-form')[0].reset();
+          }
+        });
+      } else {
+        alert('Sale canceled. Please review the details and try again.'); // Alert the cancellation
+        // Reset the form
+        $('#sale-form')[0].reset();
+      }
     } else {
-      alert('Sale canceled. Please review the details and try again.'); // Alert the cancellation
+      alert('Invalid quantity. Please enter an integer value less than or equal to the maximum quantity.'); // Alert invalid quantity
+      // Reset the form
+      $('#sale-form')[0].reset();
     }
   });
+  
 
 });
   

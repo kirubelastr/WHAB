@@ -10,23 +10,26 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
+    http_response_code(500);
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch candle names from the database
-$sql = "SELECT name FROM candles"; // Assuming 'candles' table has a column named 'name' for candle names
-$result = $conn->query($sql);
+// Fetch candle names and their total amounts from the database
+$stmt = $conn->prepare("SELECT name, SUM(amount) as total_amount FROM candleinventory GROUP BY name");
+$stmt->execute();
+$result = $stmt->get_result();
 
 $candles = array();
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $candles[] = $row;
+        $candles[$row['name']] = $row['total_amount'];
     }
 }
 
 // Close connection
+$stmt->close();
 $conn->close();
 
-// Return candle names as JSON
+// Return candle names and their total amounts as JSON
 echo json_encode($candles);
 ?>

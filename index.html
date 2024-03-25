@@ -45,7 +45,7 @@
               <label for="inventoryproduct">Candle Name:</label>
               <select id="inventoryproduct" name="inventoryproduct"></select></br>
               <label for="candle-quantity">Max Quantity :</label>
-              <input type="number" id="candle-quantity" name="maxquantity"  readonly placeholder="max amount"></br>
+              <input type="number" id="candle-quantity" name="candle-quantity"  readonly placeholder="max amount"></br>
               <label for="inventory-quantity">Quantity produced:</label>
               <input type="number" id="inventory-quantity" name="quantity" min="1" required placeholder="Enter quantity"></br>
               <button type="submit">Record Candle production</button>
@@ -57,8 +57,12 @@
             <form id="sale-form">
               <label for="sale-product">Candle Name:</label>
               <select id="sale-product" name="product"></select></br>
+              <label for="max-quantity">candle Available Quantity:</label>
+              <input type="number" id="max-quantity" name="max-quantity" min="1" readonly placeholder="max quantity"></br>
               <label for="sale-quantity">Quantity Sold:</label>
-              <input type="number" id="sale-quantity" name="quantity" min="1" required placeholder="Enter quantity"></br>
+              <input type="number" id="sale-quantity" name="sale-quantity" min="1" required placeholder="Enter quantity "></br>
+              <label for="sale-place">place:</label>
+              <input type="text" id="sale-place" name="sale-place" required placeholder="Enter place of sale"></br>
               <button type="submit">Record Sale</button>
             </form>
           </section>
