@@ -1,4 +1,88 @@
 $(document).ready(function() {
+  var today = new Date().toISOString().split('T')[0];
+  $("#sales_start_date").attr('max', today);
+  $("#sales_end_date").attr('max', today).prop('disabled', true);
+  $("#candleinventory_start_date").attr('max', today);
+  $("#candleinventory_end_date").attr('max', today).prop('disabled', true);
+  $("#inventory_start_date").attr('max', today);
+  $("#inventory_end_date").attr('max', today).prop('disabled', true);
+
+  function checkDate(id_start, id_end) {
+      var start = $("#" + id_start).val();
+      var end = $("#" + id_end).val();
+      if (start > end) {
+          $("#" + id_end).val(start);
+      }
+      $("#" + id_end).attr('min', start);
+  }
+
+  $("#sales_start_date").change(function() {
+      if(this.value) {
+          $("#sales_end_date").prop('disabled', false);
+          checkDate("sales_start_date", "sales_end_date");
+      } else {
+          $("#sales_end_date").prop('disabled', true);
+      }
+  });
+
+  $("#candleinventory_start_date").change(function() {
+      if(this.value) {
+          $("#candleinventory_end_date").prop('disabled', false);
+          checkDate("candleinventory_start_date", "candleinventory_end_date");
+      } else {
+          $("#candleinventory_end_date").prop('disabled', true);
+      }
+  });
+
+  $("#inventory_start_date").change(function() {
+      if(this.value) {
+          $("#inventory_end_date").prop('disabled', false);
+          checkDate("inventory_start_date", "inventory_end_date");
+      } else {
+          $("#inventory_end_date").prop('disabled', true);
+      }
+  });
+  
+  function populatechart(){
+      console.log("populate chart function called");
+    $.ajax({
+    url: 'most_sold_product.php',
+    type: 'get',
+    dataType: 'json',
+    success: function(response) {
+      var labels = response.map(function(e) {
+        return e.candle_type;
+      });
+      var data = response.map(function(e) {
+        return e.total_amount;
+      });
+
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Total Quantity Sold This Month',
+            data: data,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  });
+  }
+
    //populate the sales dropdown
     function populateCandleDropdown() {
       console.log("populateCandleDropdown function called");
@@ -66,7 +150,7 @@ $(document).ready(function() {
           // Update the max quantity field when a candle is selected
           select.change(function() {
             var selectedCandle = data.candleseach.find(candle => candle.name === this.value);
-            $('#candle-quantity').val(selectedCandle ? selectedCandle.max_producible_cartons * 30 + selectedCandle.max_producible_pieces : '');
+            $('#candle-quantity').val(selectedCandle ? selectedCandle.max_producible_cartons + selectedCandle.max_producible_pieces : '');
           });
 
           // Trigger the change event to update the max quantity field for the initially selected candle
@@ -83,6 +167,7 @@ $(document).ready(function() {
   }
   populateCandleDropdown();
   refreshData();
+  populatechart();
 
   $('#stock-form').off('submit').on('submit', function(e) {
     console.log("stockform called");
@@ -234,9 +319,10 @@ $(document).ready(function() {
           success: function(response) {
             alert(response); // Alert success message
             // Refresh dropdowns after successful sale recording
-            populateCandleDropdown();
             // Reset the form
+            populateCandleDropdown();
             $('#sale-form')[0].reset();
+            
           },
           error: function(xhr, status, error) {
             console.error(error);
@@ -255,8 +341,7 @@ $(document).ready(function() {
       // Reset the form
       $('#sale-form')[0].reset();
     }
-  });
+  });  
   
-
 });
   

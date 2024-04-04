@@ -1,23 +1,12 @@
 <?php
-
-// Database configuration
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "whab";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include 'database.php';
 
 // Get POST data
 $candleName = filter_input(INPUT_POST, 'candleName', FILTER_SANITIZE_STRING);
 $quantity = filter_input(INPUT_POST, 'quantity', FILTER_SANITIZE_NUMBER_INT);
+$originalQuantity = $quantity; // Store the original quantity
 $saleplace = filter_input(INPUT_POST, 'saleplace', FILTER_SANITIZE_STRING);
+
 // Start transaction
 $conn->begin_transaction();
 
@@ -61,7 +50,7 @@ try {
             // Insert the sale into the sales table
             $insertSql = "INSERT INTO sales (candle_type, amount, place) VALUES (?, ?, ?)";
             $insertStmt = $conn->prepare($insertSql);
-            $insertStmt->bind_param("sis", $candleName, $quantity, $saleplace);
+            $insertStmt->bind_param("sis", $candleName, $originalQuantity, $saleplace); // Use the original quantity here
             if ($insertStmt->execute() !== TRUE) {
                 throw new Exception("Error recording sale: " . $conn->error);
             }

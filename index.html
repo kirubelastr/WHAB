@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The WHAB CANDLE Co. - Inventory Management</title>
   <link rel="stylesheet" href="style.css">
+  <script src="chart.js"></script>
   <script src="jquery-3.6.0.min.js"></script>
   <script src="script.js"></script>
 </head>
@@ -85,21 +86,124 @@
           <button id="close" type="button">Close</button>
         </div>
       </div>
-
       <div class="bottom">
         <section id="chart" class="section chart-section">
-          <h2>Chart</h2>
-          <!-- Add chart display here -->
+            <h2>Chart</h2>
+            <canvas id="myChart"></canvas>
+            <!-- Add chart display here -->
         </section>
         <section id="sold-items" class="section sold-items-section">
-          <h2>Sold Items</h2>
-          <!-- Add display for sold items here -->
+            <h2>Sold Items</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <label for="sales_start_date" style="font-size: 0.8em;" class="date-label">Start Date:</label>
+                    <input type="date" id="sales_start_date" class="date-input" required>
+                </div>
+                <div>
+                    <label for="sales_end_date" style="font-size: 0.8em;" class="date-label">End Date:</label>
+                    <input type="date" id="sales_end_date" class="date-input" required>
+                </div>
+                <button id="sales_date_interval" class="filter-button">Filter</button>
+            </div>
+            <table id="sales_table">
+                <!-- Table body will be populated by JavaScript -->
+            </table>
         </section>
-        <section id="all-stocks" class="section all-stocks-section">
-          <h2>All Stocks</h2>
-          <!-- Add display for all stocks here -->
+    </div>
+    <div class="bottom">
+        <section id="all-stocks-candle" class="section all-stocks-section">
+            <h2>All Stocks - Candle Inventory</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <label for="candleinventory_start_date" style="font-size: 0.8em;" class="date-label">Start Date:</label>
+                    <input type="date" id="candleinventory_start_date" class="date-input" required>
+                </div>
+                <div>
+                    <label for="candleinventory_end_date" style="font-size: 0.8em;" class="date-label">End Date:</label>
+                    <input type="date" id="candleinventory_end_date" class="date-input" required>
+                </div>
+                <button id="candleinventory_date_interval" class="filter-button">Filter</button>
+            </div>
+            <table id="candleinventory_table">
+                <!-- Table body will be populated by JavaScript -->
+            </table>
         </section>
-      </div>
+        <section id="all-stocks-inventory" class="section all-stocks-section">
+            <h2>All Stocks - Inventory</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <label for="inventory_start_date" style="font-size: 0.8em;" class="date-label">Start Date:</label>
+                    <input type="date" id="inventory_start_date" class="date-input" required>
+                </div>
+                <div>
+                    <label for="inventory_end_date" style="font-size: 0.8em;" class="date-label">End Date:</label>
+                    <input type="date" id="inventory_end_date" class="date-input" required>
+                </div>
+                <button id="inventory_date_interval" class="filter-button">Filter</button>
+            </div>
+            <table id="inventory_table">
+                <!-- Table body will be populated by JavaScript -->
+            </table>
+        </section>
+    </div>
+    <style>
+        .date-input {
+            margin: 10px 0;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 150px; /* Adjust as needed */
+        }
+        .filter-button {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            width: 100px; /* Adjust as needed */
+        }
+        .filter-button:hover {
+            background-color: #45a049;
+        }
+        .date-label {
+            margin-right: 10px;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            var today = new Date().toISOString().split('T')[0];
+            document.getElementsByName("sales_start_date")[0].setAttribute('max', today);
+            document.getElementsByName("sales_end_date")[0].setAttribute('max', today);
+            document.getElementsByName("candleinventory_start_date")[0].setAttribute('max', today);
+            document.getElementsByName("candleinventory_end_date")[0].setAttribute('max', today);
+            document.getElementsByName("inventory_start_date")[0].setAttribute('max', today);
+            document.getElementsByName("inventory_end_date")[0].setAttribute('max', today);
+        }
+    
+        function checkDate(id_start, id_end) {
+            var start = document.getElementById(id_start);
+            var end = document.getElementById(id_end);
+            if (start.value > end.value) {
+                alert("End date must be greater than start date.");
+                return false;
+            }
+            return true;
+        }
+    
+        document.getElementById("sales_date_interval").addEventListener("click", function() {
+            checkDate("sales_start_date", "sales_end_date");
+        });
+    
+        document.getElementById("candleinventory_date_interval").addEventListener("click", function() {
+            checkDate("candleinventory_start_date", "candleinventory_end_date");
+        });
+    
+        document.getElementById("inventory_date_interval").addEventListener("click", function() {
+            checkDate("inventory_start_date", "inventory_end_date");
+        });
+    </script>    
+    
     </div>
   </div>
 </body>

@@ -34,7 +34,7 @@ if ($result = $conn->query($sql)) {
     while ($row = $result->fetch_assoc()) {
         // Calculate the maximum number of this type of candle that can be produced
         $max_producible = floor($total_sum / $row['amount']);
-        $row['max_producible_cartons'] = floor($max_producible / 30);
+        $row['max_producible_cartons'] = floor($max_producible);
         $row['max_producible_pieces'] = $max_producible % 30;
         $candleseach[] = $row;
     }
