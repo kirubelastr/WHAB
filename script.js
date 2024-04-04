@@ -42,46 +42,78 @@ $(document).ready(function() {
           $("#inventory_end_date").prop('disabled', true);
       }
   });
+
+  populateCandleDropdown();
+  refreshData();
+  populatechart();
   
-  function populatechart(){
-      console.log("populate chart function called");
-    $.ajax({
+}); 
+function populatechart() {
+  console.log("populate chart function called");
+  $.ajax({
     url: 'most_sold_product.php',
     type: 'get',
     dataType: 'json',
     success: function(response) {
-      var labels = response.map(function(e) {
-        return e.candle_type;
-      });
-      var data = response.map(function(e) {
-        return e.total_amount;
-      });
+      console.log("Response received:", response); // Log the response
 
-      var ctx = document.getElementById('myChart').getContext('2d');
-      var chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Total Quantity Sold This Month',
-            data: data,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true
+      // Check if response is an array
+      if (Array.isArray(response)) {
+        var labels = response.map(function(e) {
+          return e.candle_type;
+        });
+        var data = response.map(function(e) {
+          return e.total_amount;
+        });
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Total Quantity Sold',
+              data: data,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  stepSize: 1,
+                  callback: function(value, index, values) {
+                    return Number(value).toFixed(0);
+                  }
+                }
+              }
+            },
+            title: {
+              display: true,
+              text: 'Candle Sales'
             }
           }
-        }
-      });
+        });
+
+        // Display all candle types with their total quantities at the top of the chart
+        var chartTitle = labels.map(function(label, index) {
+          return label + ': ' + data[index];
+        }).join(', ');
+        document.getElementById('chartTitle').innerText = chartTitle; // Update the content of the div
+      } else {
+        // Handle non-array response
+        console.log(response.message);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error("Error occurred:", textStatus, errorThrown); // Log any errors
     }
   });
-  }
+}
 
    //populate the sales dropdown
     function populateCandleDropdown() {
@@ -165,9 +197,6 @@ $(document).ready(function() {
       }
     });
   }
-  populateCandleDropdown();
-  refreshData();
-  populatechart();
 
   $('#stock-form').off('submit').on('submit', function(e) {
     console.log("stockform called");
@@ -342,6 +371,3 @@ $(document).ready(function() {
       $('#sale-form')[0].reset();
     }
   });  
-  
-});
-  

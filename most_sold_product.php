@@ -1,7 +1,10 @@
 <?php
 include 'database.php';
 
-$sql = "SELECT candle_type, SUM(amount) as total_amount FROM sales WHERE MONTH(date) = MONTH(CURRENT_DATE()) AND YEAR(date) = YEAR(CURRENT_DATE()) GROUP BY candle_type";
+$sql = "SELECT c.name as candle_type, IFNULL(SUM(s.amount), 0) as total_amount 
+        FROM candles c 
+        LEFT JOIN sales s ON c.name = s.candle_type
+        GROUP BY c.name";
 $result = $conn->query($sql);
 
 $data = array();
@@ -11,7 +14,7 @@ if ($result->num_rows > 0) {
     $data[] = $row;
   }
 } else {
-  echo "No sales data for this month.";
+  $data = array("message" => "No sales data available.");
 }
 echo json_encode($data);
 

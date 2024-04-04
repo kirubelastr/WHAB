@@ -102,6 +102,12 @@ header {
   text-decoration: none;
   cursor: pointer;
 }
+#chartTitle {
+  background-color: rgba(75, 192, 192, 0.2);
+  padding: 10px;
+  color: rgba(75, 192, 192, 1);
+  font-weight: bold;
+}
 
 form {
   display: flex;

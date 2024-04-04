@@ -88,9 +88,9 @@
       </div>
       <div class="bottom">
         <section id="chart" class="section chart-section">
-            <h2>Chart</h2>
-            <canvas id="myChart"></canvas>
-            <!-- Add chart display here -->
+          <h2>Chart</h2>
+          <div id="chartTitle"></div> <!-- Add this line -->
+          <canvas id="myChart"></canvas>
         </section>
         <section id="sold-items" class="section sold-items-section">
             <h2>Sold Items</h2>
@@ -169,41 +169,7 @@
         .date-label {
             margin-right: 10px;
         }
-    </style>
-    <script>
-        window.onload = function() {
-            var today = new Date().toISOString().split('T')[0];
-            document.getElementsByName("sales_start_date")[0].setAttribute('max', today);
-            document.getElementsByName("sales_end_date")[0].setAttribute('max', today);
-            document.getElementsByName("candleinventory_start_date")[0].setAttribute('max', today);
-            document.getElementsByName("candleinventory_end_date")[0].setAttribute('max', today);
-            document.getElementsByName("inventory_start_date")[0].setAttribute('max', today);
-            document.getElementsByName("inventory_end_date")[0].setAttribute('max', today);
-        }
-    
-        function checkDate(id_start, id_end) {
-            var start = document.getElementById(id_start);
-            var end = document.getElementById(id_end);
-            if (start.value > end.value) {
-                alert("End date must be greater than start date.");
-                return false;
-            }
-            return true;
-        }
-    
-        document.getElementById("sales_date_interval").addEventListener("click", function() {
-            checkDate("sales_start_date", "sales_end_date");
-        });
-    
-        document.getElementById("candleinventory_date_interval").addEventListener("click", function() {
-            checkDate("candleinventory_start_date", "candleinventory_end_date");
-        });
-    
-        document.getElementById("inventory_date_interval").addEventListener("click", function() {
-            checkDate("inventory_start_date", "inventory_end_date");
-        });
-    </script>    
-    
+    </style> 
     </div>
   </div>
 </body>
