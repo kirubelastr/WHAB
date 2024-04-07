@@ -105,9 +105,12 @@
                 </div>
                 <button id="sales_date_interval" class="filter-button">Filter</button>
             </div>
-            <table id="sales_table">
+            <div style="max-height: 300px; overflow-y: auto;">
+              <table id="sales_table">
                 <!-- Table body will be populated by JavaScript -->
-            </table>
+              </table>
+            </div>
+            
         </section>
     </div>
     <div class="bottom">
@@ -169,6 +172,7 @@
         .date-label {
             margin-right: 10px;
         }
+        
     </style> 
     </div>
   </div>

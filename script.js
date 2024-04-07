@@ -46,8 +46,7 @@ $(document).ready(function() {
   populateCandleDropdown();
   refreshData();
   populatechart();
-  
-}); 
+
 function populatechart() {
   console.log("populate chart function called");
   $.ajax({
@@ -326,7 +325,6 @@ function populatechart() {
       alert('Production canceled. Please review the details and try again.'); // Alert the cancellation
     }
   });
-  
   $('#sale-form').submit(function(e) {
     e.preventDefault();
     var candleName = $('#sale-product').val();
@@ -348,26 +346,259 @@ function populatechart() {
           success: function(response) {
             alert(response); // Alert success message
             // Refresh dropdowns after successful sale recording
-            // Reset the form
             populateCandleDropdown();
-            $('#sale-form')[0].reset();
-            
+            // Clear the "Quantity Sold" and "Place" inputs
+            $('#sale-quantity').val('');
+            $('#sale-place').val('');
           },
           error: function(xhr, status, error) {
             console.error(error);
             alert('Error recording sale. Please try again later.'); // Alert error message
-            // Reset the form
-            $('#sale-form')[0].reset();
+            // Clear the "Quantity Sold" and "Place" inputs
+            $('#sale-quantity').val('');
+            $('#sale-place').val('');
           }
         });
       } else {
         alert('Sale canceled. Please review the details and try again.'); // Alert the cancellation
-        // Reset the form
-        $('#sale-form')[0].reset();
       }
     } else {
       alert('Invalid quantity. Please enter an integer value less than or equal to the maximum quantity.'); // Alert invalid quantity
-      // Reset the form
-      $('#sale-form')[0].reset();
     }
-  });  
+  });
+  
+});   // Fetch data from the server
+// Fetch data from the server
+async function fetchData() {
+  try {
+    const response = await fetch('dataHandler.php');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    console.log('There was a problem with the fetch operation: ' + e.message);
+  }
+}
+
+// Populate the table
+async function populateTable() {
+  try {
+    // Clear the table first
+    const table = document.getElementById('sales_table');
+    table.innerHTML = '';
+
+    // Create table header
+    const header = table.createTHead();
+    const headerRow = header.insertRow(0);
+    const headers = ['Candle Name', 'Quantity', 'Place', 'Delete', 'Update'];
+    headers.forEach((header, i) => {
+      const th = document.createElement('th');
+      th.textContent = header;
+      headerRow.appendChild(th);
+    });
+
+    const data = await fetchData();
+    data.forEach((item, i) => {
+      const row = table.insertRow(i+1); // +1 to account for header row
+      Object.values(item).forEach((value, j) => {
+        if (j > 0) { // Skip the id
+          const cell = row.insertCell(j-1);
+          cell.textContent = value;
+        }
+      });
+      const deleteCell = row.insertCell(-1);
+      const updateCell = row.insertCell(-1);
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.style.backgroundColor = 'red';
+      deleteButton.style.color = 'white';
+      deleteButton.style.border = 'none';
+      deleteButton.style.padding = '15px 32px';
+      deleteButton.style.textAlign = 'center';
+      deleteButton.style.textDecoration = 'none';
+      deleteButton.style.display = 'inline-block';
+      deleteButton.style.fontSize = '16px';
+      deleteButton.style.margin = '4px 2px';
+      deleteButton.style.cursor = 'pointer';
+      deleteButton.addEventListener('click', () => openModal(item, 'delete'));
+      deleteCell.appendChild(deleteButton);
+      const updateButton = document.createElement('button');
+      updateButton.textContent = 'Update';
+      updateButton.style.backgroundColor = 'gray';
+      updateButton.style.color = 'white';
+      updateButton.style.border = 'none';
+      updateButton.style.padding = '15px 32px';
+      updateButton.style.textAlign = 'center';
+      updateButton.style.textDecoration = 'none';
+      updateButton.style.display = 'inline-block';
+      updateButton.style.fontSize = '16px';
+      updateButton.style.margin = '4px 2px';
+      updateButton.style.cursor = 'pointer';
+      updateButton.addEventListener('click', () => openModal(item, 'update'));
+      updateCell.appendChild(updateButton);
+    });
+
+    // Style the table
+    table.style.width = '100%';
+    table.style.borderCollapse = 'collapse';
+    table.querySelectorAll('th, td').forEach(cell => {
+      cell.style.border = '1px solid black';
+      cell.style.padding = '8px';
+      cell.style.textAlign = 'left';
+    });
+    table.querySelectorAll('tr:nth-child(even)').forEach(row => {
+      row.style.backgroundColor = '#f2f2f2';
+    });
+    table.querySelectorAll('tr:nth-child(odd)').forEach(row => {
+      row.style.backgroundColor = '#dcdcdc';
+    });
+  } catch (e) {
+    console.log('There was a problem with the fetch operation: ' + e.message);
+  }
+}
+
+// Open modal
+function openModal(item, action) {
+  // Create modal
+  const modal = document.createElement('div');
+  modal.style.position = 'fixed';
+  modal.style.zIndex = '1';
+  modal.style.left = '0';
+  modal.style.top = '0';
+  modal.style.width = '100%';
+  modal.style.height = '100%';
+  modal.style.overflow = 'auto';
+  modal.style.backgroundColor = 'rgba(0,0,0,0.4)';
+
+  // Create modal content
+  const modalContent = document.createElement('div');
+  modalContent.style.backgroundColor = '#fefefe';
+  modalContent.style.margin = '15% auto';
+  modalContent.style.padding = '20px';
+  modalContent.style.border = '1px solid #888';
+  modalContent.style.width = '80%';
+  modalContent.style.maxHeight = '70vh'; // Limit the height of the modal content
+  modalContent.style.overflowY = 'auto'; // Make the modal content scrollable
+
+  // Create a table in the modal content
+  const table = document.createElement('table');
+  table.style.width = '100%';
+  table.style.borderCollapse = 'collapse';
+  
+  // Create header row
+  const headerRow = table.insertRow(0);
+  Object.keys(item).forEach((key, i) => {
+    if (i > 0) { // Skip the id
+      const th = document.createElement('th');
+      th.textContent = key;
+      th.style.border = '1px solid black';
+      th.style.padding = '8px';
+      th.style.textAlign = 'left';
+      headerRow.appendChild(th);
+    }
+  });
+
+  // Create data row
+  const dataRow = table.insertRow(1);
+  Object.values(item).forEach((value, i) => {
+    if (i > 0) { // Skip the id
+      const cell = dataRow.insertCell(i-1);
+      cell.textContent = value;
+      cell.style.border = '1px solid black';
+      cell.style.padding = '8px';
+      cell.style.textAlign = 'left';
+    }
+  });
+
+  modalContent.appendChild(table);
+
+  // Create a div for the buttons
+  const buttonDiv = document.createElement('div');
+  buttonDiv.style.textAlign = 'right'; // Align the buttons to the right
+
+  // Add action button to the div
+  const actionButton = document.createElement('button');
+  actionButton.textContent = action.charAt(0).toUpperCase() + action.slice(1);
+  actionButton.style.backgroundColor = action === 'delete' ? 'red' : 'green';
+  actionButton.style.marginRight = '10px';
+  actionButton.style.color = 'white';
+  actionButton.style.border = 'none';
+  actionButton.style.padding = '15px 32px';
+  actionButton.style.textAlign = 'center';
+  actionButton.style.textDecoration = 'none';
+  actionButton.style.display = 'inline-block';
+  actionButton.style.fontSize = '16px';
+  actionButton.style.margin = '4px 2px';
+  actionButton.style.cursor = 'pointer';
+  actionButton.addEventListener('click', async () => {
+    if (action === 'delete') {
+      await deleteRow(item.id);
+    } else if (action === 'update') {
+      // Get new data from the user
+      const newData = prompt('Enter new data');
+      await updateRow(item.id, newData);
+    }
+    modal.style.display = 'none';
+    await populateTable(); // Refresh the table
+    populateCandleDropdown();
+    refreshData();
+    populatechart();
+  });
+  buttonDiv.appendChild(actionButton);
+
+  // Add close button to the div
+  const closeButton = document.createElement('button');
+  closeButton.textContent = 'Close';
+  closeButton.style.backgroundColor = 'gray';
+  closeButton.style.color = 'white';
+  closeButton.style.border = 'none';
+  closeButton.style.padding = '15px 32px';
+  closeButton.style.textAlign = 'center';
+  closeButton.style.textDecoration = 'none';
+  closeButton.style.display = 'inline-block';
+  closeButton.style.fontSize = '16px';
+  closeButton.style.margin = '4px 2px';
+  closeButton.style.cursor = 'pointer';
+  closeButton.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+  buttonDiv.appendChild(closeButton);
+
+  // Add the div to the modal content
+  modalContent.appendChild(buttonDiv);
+
+  // Add modal content to modal
+  modal.appendChild(modalContent);
+
+  // Add modal to body
+  document.body.appendChild(modal);
+}
+
+// Delete a row
+async function deleteRow(id) {
+  try {
+    const response = await fetch(`dataHandler.php?id=${id}`, { method: 'DELETE' });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (e) {
+    console.log('There was a problem with the fetch operation: ' + e.message);
+  }
+}
+
+// Update a row
+async function updateRow(id, newData) {
+  try {
+    const response = await fetch(`dataHandler.php?id=${id}&newData=${newData}`, { method: 'PUT' });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (e) {
+    console.log('There was a problem with the fetch operation: ' + e.message);
+  }
+}
+
+// Call populateTable when the page loads
+window.onload = populateTable;
