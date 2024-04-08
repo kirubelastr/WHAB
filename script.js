@@ -330,6 +330,7 @@ $(document).ready(function() {
                     $('#sale-place').val('');
 
                     // After successful sale recording, update the UI
+                    populateCandleDropdown
                     populateTable();
                     populatechart();
                 },
