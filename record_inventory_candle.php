@@ -1,18 +1,6 @@
 <?php
 
-// Database configuration
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "whab";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include 'database.php';
 
 // Get POST data and sanitize
 $maxwax = filter_input(INPUT_POST, 'maxwax', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);

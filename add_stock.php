@@ -1,5 +1,5 @@
 <?php
-
+include 'database.php';
 // Check if request is POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Get POST data
@@ -15,15 +15,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo 'Invalid input. Please enter a number for bag number, weight, and total.';
     exit;
   }
-
-  // Connect to database
-  $conn = new mysqli('localhost', 'root', '', 'whab');
-
-  // Check connection
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
-
   // Start transaction
   $conn->begin_transaction();
 
@@ -53,9 +44,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Close connection
   $stmt->close();
-  $conn->close();
+  
 } else {
   echo "Invalid request";
 }
-
+$conn->close();
 ?>

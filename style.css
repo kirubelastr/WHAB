@@ -7,7 +7,7 @@ body {
 
 .container {
   max-width: 100%;
-  margin: 0 auto;
+  margin: 0 0;
 }
 
 header {
@@ -65,8 +65,86 @@ header {
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
 }
 
+.chart-section {
+  flex: 30%;
+}
+
+.ta-section {
+  flex: 70%;
+}
+
 .section h2 {
   margin-top: 0;
+}
+
+.common-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.common-table th, .common-table td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+}
+
+.common-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.common-table tr:nth-child(odd) {
+  background-color: #dcdcdc;
+}
+
+.delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 2px 0px;
+  cursor: pointer;
+}
+
+.close-button {
+  background-color: gray;
+  color: white;
+  border: none;
+  padding: 5px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 2px 5px;
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.button-div {
+  text-align: right;
 }
 
 .popup {
@@ -102,6 +180,7 @@ header {
   text-decoration: none;
   cursor: pointer;
 }
+
 #chartTitle {
   background-color: rgba(75, 192, 192, 0.2);
   padding: 10px;
@@ -178,3 +257,4 @@ form button:hover {
 .popup-content table tr:nth-child(even) {
   background-color: #f2f2f2;
 }
+

@@ -1,18 +1,5 @@
 <?php
-// Database configuration
-$servername = "localhost"; // Change this to your database server name
-$username = "root"; // Change this to your database username
-$password = ""; // Change this to your database password
-$dbname = "whab"; // Change this to your database name
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+include 'database.php';
 // Initialize total sum
 $total_sum = 0;
 
@@ -35,7 +22,6 @@ if ($result = $conn->query($sql)) {
         // Calculate the maximum number of this type of candle that can be produced
         $max_producible = floor($total_sum / $row['amount']);
         $row['max_producible_cartons'] = floor($max_producible);
-        $row['max_producible_pieces'] = $max_producible % 30;
         $candleseach[] = $row;
     }
     $result->free();
