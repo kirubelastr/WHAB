@@ -153,10 +153,26 @@ function populateCandleDropdown() {
       }
     });
 }
+function fetchDatabox() {
+  fetch('getdata.php')
+  .then(response => response.json())
+  .then(data => {
+    const candleContainer = document.getElementById('candleContainer');
+    data.candles.forEach(candle => {
+      const div = document.createElement('div');
+      div.className = 'candle';
+      div.textContent = `Type: ${candle.name}, Amount: ${candle.total_amount}`;
+      candleContainer.appendChild(div);
+    });
 
+    const totalWax = document.getElementById('totalWax');
+    totalWax.textContent = `${data.total_wax} kg`;
+  })
+  .catch(error => console.error('Error:', error));
+}
   
 $(document).ready(function() {
-
+  fetchDatabox();
   populateCandleDropdown();
   refreshData();
   populatechart();

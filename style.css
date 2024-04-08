@@ -72,6 +72,37 @@ header {
 .ta-section {
   flex: 70%;
 }
+.inventory-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.inventory-box {
+  flex: 1;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+}
+
+.candle-inventory {
+  background-color: #ffd700; /* Yellow */
+}
+
+.wax-inventory {
+  background-color: #87ceeb; /* Sky Blue */
+}
+
+.inventory-box h2 {
+  margin-top: 0;
+  font-size: 1.2em;
+}
+
+.inventory-box p {
+  margin: 0;
+}
 
 .section h2 {
   margin-top: 0;
