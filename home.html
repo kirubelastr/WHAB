@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The WHAB CANDLE Co. - Inventory Management</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="chart.js"></script>
+  <script src="jquery-3.6.0.min.js"></script>
+  <script src="script.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 id="logo">ወሀብ ሻማ / WHAB CANDLE</h1>
+      <h1 id="title">Stock Management</h1>
+      <button id="logout" type="button" >Logout</button>
+    </header>
+    <div class="general">
+      <main>
+        <div class="top">
+          <section id="add-stock" class="section stock-section">
+            <h2>Replenish Wax Stock</h2>
+            <form id="stock-form">
+              <label for="stock-description">Description:</label>
+              <select id="stock-description" name="stock-description">
+                <option value="waxandoil">Wax & oil</option>
+              </select></br>
+              <label for="stock-bag-number">Bag Number:</label>
+              <input type="number" id="stock-bag-number" name="bag_number" min="1" step="1" required placeholder="Enter bag number"></br>
+              <label for="stock-weight">Weight Added (in kg):</label>
+              <input type="number" id="stock-weight" name="weight" min="0.1" step="0.1" required placeholder="Enter weight"></br>
+              <label for="stock-place">Place:</label>
+              <input type="text" id="stock-place" name="place" required placeholder="Enter place"></br>
+              <label for="stock-remark">Remark:</label>
+              <input type="text" id="stock-remark" name="remark" required placeholder="Enter remark"></br>
+              <button type="submit">Add Stock</button>
+            </form>
+          </section>
+
+          <section id="add-inventory" class="section inventory-section">
+            <h2>Record a Sale</h2>
+            <form id="inventory-form">
+              <label for="inventory-wax">Available Wax (in kg):</label>
+              <input type="number" id="inventory-wax" name="wax" min="1"  readonly></br>
+              <label for="inventoryproduct">Candle Name:</label>
+              <select id="inventoryproduct" name="inventoryproduct"></select></br>
+              <label for="candle-quantity">Max Quantity :</label>
+              <input type="number" id="candle-quantity" name="candle-quantity"  readonly placeholder="max amount"></br>
+              <label for="inventory-quantity">Quantity produced:</label>
+              <input type="number" id="inventory-quantity" name="quantity" min="1" required placeholder="Enter quantity"></br>
+              <button type="submit">Record Candle production</button>
+            </form>
+          </section>
+
+          <section id="add-sale" class="section sale-section">
+            <h2>Record a Sale</h2>
+            <form id="sale-form">
+              <label for="sale-product">Candle Name:</label>
+              <select id="sale-product" name="product"></select></br>
+              <label for="max-quantity">candle Available Quantity:</label>
+              <input type="number" id="max-quantity" name="max-quantity" min="1" readonly placeholder="max quantity"></br>
+              <label for="sale-quantity">Quantity Sold:</label>
+              <input type="number" id="sale-quantity" name="sale-quantity" min="1" required placeholder="Enter quantity "></br>
+              <label for="sale-place">place:</label>
+              <input type="text" id="sale-place" name="sale-place" required placeholder="Enter place of sale"></br>
+              <button type="submit">Record Sale</button>
+            </form>
+          </section>
+        </div>
+      </main>
+     <!-- Confirmation Popup -->
+      <div id="popup-confirm" class="popup">
+        <div class="popup-content">
+          <span class="close">×</span>
+          <p id="confirm-text"></p>
+          <button id="confirm" type="button">Confirm</button>
+        </div>
+      </div>
+
+      <!-- Result Popup -->
+      <div id="popup-result" class="popup">
+        <div class="popup-content">
+          <span class="close">×</span>
+          <p id="result-text"></p>
+          <button id="close" type="button">Close</button>
+        </div>
+      </div>
+
+      <div class="bottom" style="display: flex;">
+        <section id="chart" class="section chart-section" style="width: 30%; height: 70vh;">
+          <div class="inventory-container">
+            <div class="inventory-box candle-inventory">
+              <div id="candleContainer"></div>
+            </div>
+          
+            <div class="inventory-box wax-inventory">
+              <h2>Total Wax</h2>
+              <p id="totalWax"></p>
+            </div>
+          </div>
+          
+          <h2>Chart</h2>
+          <div id="chartTitle"></div> <!-- Add this line -->
+          <canvas id="myChart"></canvas>
+        </section>
+        <section style="width: 65%; height: 70vh;">
+          <div class="section ta-section" style="width: 93%; height: 100%;">
+            <div class="tabs">
+              <button class="tablinks" onclick="openSection(event, 'sold-items')">Sold Items Datas</button>
+              <button class="tablinks" onclick="openSection(event, 'all-stocks-candle')">Candles Stock Datas</button>
+              <button class="tablinks" onclick="openSection(event, 'all-stocks-inventory')">Wax Inventory Datas</button>
+            </div>
+            <div id="sold-items" class="tabcontent">
+                <section id="sold-items" class="section sold-items-section">
+                    <h2>Sold Items Datas</h2>
+                  
+                    <div style="max-height: 350px; overflow-y: auto;">
+                      <table id="sales_table" class="common-table">
+                        <!-- Table body will be populated by JavaScript -->
+                      </table>
+                    </div>
+                </section>
+                </div>
+                <div id="all-stocks-candle" class="tabcontent">
+                <section id="all-stocks-candle" class="section all-stocks-section">
+                    <h2>Candles Stock Datas</h2>
+                    <div style="max-height: 350px; overflow-y: auto;">
+                    <table id="candleinventory_table" class="common-table">
+                        <!-- Table body will be populated by JavaScript -->
+                    </table>
+                    </div>
+                </section>
+                </div>
+                <div id="all-stocks-inventory" class="tabcontent">
+                <section id="all-stocks-inventory" class="section all-stocks-section">
+                    <h2>Wax Inventory Datas</h2>
+                    <div style="max-height: 350px; overflow-y: auto;">
+                    <table id="inventory_table" class="common-table">
+                        <!-- Table body will be populated by JavaScript -->
+                    </table>
+                    </div>
+                </section>
+                </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      
+      <script>
+      function openSection(evt, sectionName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(sectionName).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+      
+      // Get the element with id="defaultOpen" and click on it
+      document.getElementsByClassName("tablinks")[0].click();
+      </script>
+      
+      <style>
+          :root {
+            --primary-color: #246e76; /* Main theme color */
+            --secondary-color: #4CAF50; /* Secondary theme color */
+            --accent-color: #fff; /* Accent color */
+          }
+
+          /* Tab animation */
+          .tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+          }
+
+          .tablinks {
+            position: relative;
+            background-color: var(--primary-color);
+            color: var(--accent-color);
+            padding: 10px 15px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+          }
+
+          .tablinks:hover {
+            background-color: #4CAF50; /* Change to secondary color on hover */
+          }
+
+          .tablinks.active {
+            background-color: #ddd;
+            color: var(--primary-color);
+            animation: neonLight 1.5s ease-in-out infinite alternate;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            border-radius: 10px; /* Add border radius */
+          }
+
+          @keyframes neonLight {
+            0% {
+              box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            }
+            50% {
+              box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+            }
+            100% {
+              box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            }
+          }
+
+          .tabcontent {
+            display: none;
+            width: 100%;
+            height: 100%;
+            animation: fadeIn 1s;
+          }
+
+      </style>
+      </div>
+    <style>
+        .date-input {
+            margin: 10px 0;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 150px; /* Adjust as needed */
+        }
+        .filter-button {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            width: 100px; /* Adjust as needed */
+        }
+        .filter-button:hover {
+            background-color: #45a049;
+        }
+        .date-label {
+            margin-right: 10px;
+        }
+        
+    </style> 
+    </div>
+  </div>
+</body>
+</html>

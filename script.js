@@ -170,8 +170,47 @@ function fetchDatabox() {
   })
   .catch(error => console.error('Error:', error));
 }
-  
 $(document).ready(function() {
+  // Check if the user is logged in
+  $.ajax({
+    url: 'check_login.php',  // The name of your PHP script
+    type: 'POST',
+    success: function(response) {
+      if (response !== 'logged_in') {
+        window.location.href = 'index.html'; // Redirect to login page if not logged in
+      }
+    }
+  });
+
+  // Set timeout to 15 minutes (900000 milliseconds)
+  var timeout = 900000;
+  var logoutTimer = setTimeout(logout, timeout);
+
+  // Reset the timer on any activity
+  window.onload = resetTimer;
+  window.onmousemove = resetTimer;
+  window.onmousedown = resetTimer; // catches touchscreen presses
+  window.ontouchstart = resetTimer; // catches touchscreen swipes
+  window.onclick = resetTimer;      // catches touchpad clicks
+  window.onkeypress = resetTimer;
+  window.addEventListener('scroll', resetTimer, true); // improved; see comments
+
+  function logout() {
+    // Make an AJAX call to a PHP script to destroy the session
+    $.ajax({
+      url: 'logout.php',  // The name of your PHP script
+      type: 'POST',
+      success: function() {
+        window.location.href = 'index.html'; // Redirect to login page
+      }
+    });
+  }
+
+  function resetTimer() {
+    clearTimeout(logoutTimer);
+    logoutTimer = setTimeout(logout, timeout);
+  }
+  $('#logout').click(logout);
   fetchDatabox();
   populateCandleDropdown();
   refreshData();
